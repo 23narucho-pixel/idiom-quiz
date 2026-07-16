@@ -1,0 +1,690 @@
+/* -------------------------------------------------------------
+ * 1. Jasper AI 디자인 시스템 정의 (CSS Variables)
+ * ------------------------------------------------------------- */
+:root {
+  --bg-color: #0b0c10;
+  --card-bg: #16171f;
+  --card-inner: #1f2029;
+  
+  /* Jasper 시그니처 네온 그라데이션 */
+  --primary-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
+  
+  --primary-color: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --primary-light: rgba(139, 92, 246, 0.1);
+  
+  /* 네온 컬러 피드백 */
+  --success-color: #10b981;
+  --success-light: rgba(16, 185, 129, 0.12);
+  --error-color: #f43f5e;
+  --error-light: rgba(244, 63, 94, 0.12);
+  
+  /* 텍스트 컬러스킴 */
+  --text-primary: #f3f4f6;
+  --text-muted: #9ca3af;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(139, 92, 246, 0.5);
+  
+  --font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  --shadow-glow: 0 0 25px rgba(139, 92, 246, 0.25);
+  --shadow-success-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  --shadow-error-glow: 0 0 20px rgba(244, 63, 94, 0.3);
+  
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s ease;
+  --border-radius-lg: 24px;
+  --border-radius-md: 14px;
+}
+
+/* -------------------------------------------------------------
+ * 2. Reset & Base Styles
+ * ------------------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  line-height: 1.65;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+/* -------------------------------------------------------------
+ * 3. Screen Control (SPA 전환)
+ * ------------------------------------------------------------- */
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.screen.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  animation: jasperSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes jasperSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------------------------------------
+ * 4. Premium Card & Badge & Buttons
+ * ------------------------------------------------------------- */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 50px 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  position: relative;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.neon-badge {
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #c084fc;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
+}
+
+.neon-badge-success {
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+}
+
+/* 그라데이션 타이틀 텍스트 */
+.gradient-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn {
+  font-family: var(--font-family);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: all var(--transition-normal);
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: -0.01em;
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: #ffffff;
+  padding: 16px 24px;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    to right, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.15) 50%, 
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s ease;
+  opacity: 0;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5), 0 0 15px rgba(236, 72, 153, 0.2);
+}
+
+.btn-primary:hover::after {
+  left: 125%;
+  opacity: 1;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-large {
+  padding: 18px 32px;
+  font-size: 1.15rem;
+  border-radius: 14px;
+}
+
+/* -------------------------------------------------------------
+ * 5. Screen 1: Start Screen (Jasper AI 컨셉)
+ * ------------------------------------------------------------- */
+.main-title {
+  font-size: 2.6rem;
+  font-weight: 900;
+  margin-bottom: 18px;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 45px;
+  padding: 0 10px;
+}
+
+/* 로봇풍 네온 프롬프트 칩 애니메이션 그래픽 */
+.start-graphic {
+  position: relative;
+  height: 160px;
+  margin-bottom: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.prompt-chip {
+  position: absolute;
+  background-color: var(--card-inner);
+  border: 1px solid var(--border-color);
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.chip-1 {
+  left: 5%;
+  top: 15%;
+  border-color: rgba(236, 72, 153, 0.4); /* 핑크 보더 */
+  animation: jasperFloat 5s infinite ease-in-out;
+}
+
+.chip-2 {
+  right: 5%;
+  top: 30%;
+  border-color: rgba(59, 130, 246, 0.4); /* 블루 보더 */
+  animation: jasperFloat 5s infinite ease-in-out 1.8s;
+}
+
+.chip-3 {
+  bottom: 10%;
+  left: 25%;
+  border-color: rgba(139, 92, 246, 0.4); /* 퍼플 보더 */
+  animation: jasperFloat 5s infinite ease-in-out 0.9s;
+}
+
+@keyframes jasperFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.1);
+  }
+}
+
+/* -------------------------------------------------------------
+ * 6. Screen 2: Quiz Screen
+ * ------------------------------------------------------------- */
+.quiz-header {
+  margin-bottom: 30px;
+}
+
+.progress-container {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-md);
+  padding: 18px 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.progress-label {
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.progress-bar-bg {
+  background-color: #1e293b;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: var(--primary-gradient);
+  height: 100%;
+  width: 0%;
+  border-radius: 10px;
+  transition: width 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+}
+
+.quiz-card {
+  text-align: left;
+  padding: 45px 35px;
+}
+
+.quiz-question-box {
+  margin-bottom: 35px;
+}
+
+.question-number-badge {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary-hover);
+  display: block;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
+.question-text {
+  font-size: 1.38rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* 4지선다 옵션 리스트 */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.option-btn {
+  background-color: var(--card-inner);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  text-align: left;
+  padding: 18px 24px;
+  border-radius: var(--border-radius-md);
+  font-size: 1.02rem;
+  font-weight: 500;
+  width: 100%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  outline: none;
+}
+
+.option-num {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  background-color: rgba(139, 92, 246, 0.08);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+  transform: translateX(4px);
+}
+
+.option-btn:hover:not(:disabled) .option-num {
+  color: var(--primary-hover);
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.option-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* 채점 완료 피드백 스타일 */
+.option-btn.selected-correct {
+  border-color: var(--success-color);
+  background-color: var(--success-light);
+  color: var(--success-color);
+  font-weight: 700;
+  box-shadow: var(--shadow-success-glow);
+}
+
+.option-btn.selected-correct .option-num {
+  background-color: var(--success-color);
+  color: #ffffff;
+  border-color: var(--success-color);
+}
+
+.option-btn.selected-incorrect {
+  border-color: var(--error-color);
+  background-color: var(--error-light);
+  color: var(--error-color);
+  font-weight: 700;
+  box-shadow: var(--shadow-error-glow);
+}
+
+.option-btn.selected-incorrect .option-num {
+  background-color: var(--error-color);
+  color: #ffffff;
+  border-color: var(--error-color);
+}
+
+.option-btn.dimmed {
+  opacity: 0.35;
+}
+
+/* -------------------------------------------------------------
+ * 7. Screen 3: Result Screen & 오답 분석 리포트
+ * ------------------------------------------------------------- */
+.result-card {
+  padding: 55px 35px;
+}
+
+.result-title {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 30px;
+}
+
+/* 빛나는 네온 서클 스코어 */
+.score-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 35px;
+}
+
+.score-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #111219;
+  border: 5px solid var(--primary-color);
+  box-shadow: var(--shadow-glow), inset 0 0 15px rgba(139, 92, 246, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: popInGlow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.score-value {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  line-height: 1;
+}
+
+.score-max {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}
+
+.result-message {
+  font-size: 1.12rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 45px;
+  line-height: 1.6;
+}
+
+@keyframes popInGlow {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+    box-shadow: 0 0 0 transparent;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+/* 오답 분석 섹션 디자인 */
+.review-section {
+  text-align: left;
+  border-top: 1px solid var(--border-color);
+  padding-top: 35px;
+  margin-bottom: 45px;
+}
+
+.review-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-item {
+  border-radius: var(--border-radius-md);
+  padding: 22px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-inner);
+  transition: border-color 0.25s ease;
+}
+
+.review-item.correct {
+  border-left: 4px solid var(--success-color);
+}
+
+.review-item.incorrect {
+  border-left: 4px solid var(--error-color);
+}
+
+.review-q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.review-q-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.review-status-badge {
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.correct .review-status-badge {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.incorrect .review-status-badge {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+}
+
+.review-answers {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 12px;
+}
+
+.review-user-ans {
+  margin-bottom: 6px;
+}
+
+.review-user-ans span.wrong {
+  color: #f87171;
+  font-weight: 700;
+}
+
+.review-correct-ans span {
+  color: #34d399;
+  font-weight: 700;
+}
+
+/* 해설 박스 */
+.review-explanation {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.incorrect .review-explanation {
+  background-color: rgba(244, 63, 94, 0.02);
+  border-color: rgba(244, 63, 94, 0.15);
+}
+
+.explanation-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.explanation-desc {
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.explanation-example {
+  color: #a78bfa;
+  font-style: normal;
+  font-size: 0.82rem;
+  display: block;
+}
+
+.button-group {
+  margin-top: 25px;
+}
+
+/* -------------------------------------------------------------
+ * 8. Responsive Design
+ * ------------------------------------------------------------- */
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  
+  .card {
+    padding: 35px 20px;
+  }
+  
+  .main-title {
+    font-size: 2.1rem;
+  }
+  
+  .prompt-chip {
+    font-size: 0.78rem;
+    padding: 9px 15px;
+  }
+  
+  .quiz-card {
+    padding: 30px 20px;
+  }
+  
+  .question-text {
+    font-size: 1.18rem;
+  }
+  
+  .option-btn {
+    font-size: 0.95rem;
+    padding: 15px 18px;
+  }
+  
+  .score-circle {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .score-value {
+    font-size: 2.8rem;
+  }
+}

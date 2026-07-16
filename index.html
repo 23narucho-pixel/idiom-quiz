@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>도전! 초등학교 6학년 관용표현 퀴즈</title>
+  <!-- Google Fonts: Inter와 Noto Sans KR 연결 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 1. 메인 시작 화면 -->
+    <section id="screen-start" class="screen active">
+      <div class="card start-card">
+        <div class="badge neon-badge">AI 스마트 챌린지</div>
+        <h1 class="main-title">
+          <span class="gradient-text">관용표현 퀴즈</span>
+        </h1>
+        <p class="subtitle">초등학교 6학년 수준의 필수 관용표현 5문제를 해결하고 학습해보세요.</p>
+        
+        <!-- Jasper AI 느낌의 세련된 플로팅 프롬프트 칩 그래픽 -->
+        <div class="start-graphic">
+          <div class="prompt-chip chip-1">#발이_넓다 👣</div>
+          <div class="prompt-chip chip-2">#귀가_얇다 👂</div>
+          <div class="prompt-chip chip-3">#쇠뿔도_단김에! 🐂</div>
+        </div>
+        
+        <button id="btn-start" class="btn btn-primary btn-large">시작하기</button>
+      </div>
+    </section>
+
+    <!-- 2. 퀴즈 풀이 화면 -->
+    <section id="screen-quiz" class="screen">
+      <div class="quiz-header">
+        <div class="progress-container">
+          <div class="progress-info">
+            <span class="progress-label">진행 상황</span>
+            <span id="quiz-progress-text" class="gradient-text">1 / 5</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="quiz-progress-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card quiz-card">
+        <div class="quiz-question-box">
+          <span class="question-number-badge" id="question-number">Q1.</span>
+          <h2 id="quiz-question" class="question-text">질문 텍스트가 들어갈 자리입니다.</h2>
+        </div>
+        <div id="quiz-options" class="options-grid">
+          <!-- 자바스크립트로 4지선다 버튼을 생성합니다 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 결과 화면 -->
+    <section id="screen-result" class="screen">
+      <div class="card result-card">
+        <div class="badge success-badge neon-badge-success">분석 완료</div>
+        <h1 class="result-title">나의 종합 점수</h1>
+        
+        <div class="score-container">
+          <div class="score-circle">
+            <span id="result-score" class="score-value">0</span>
+            <span class="score-max">/ 100</span>
+          </div>
+        </div>
+        
+        <p id="result-message" class="result-message">데이터 계산 중...</p>
+        
+        <!-- 오답 노트 섹션 -->
+        <div class="review-section">
+          <h3 class="review-title">📝 오답 분석 보고서</h3>
+          <div id="review-list" class="review-list">
+            <!-- 자바스크립트로 푼 문항 정보(정오답 해설)가 렌더링됩니다 -->
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button id="btn-restart" class="btn btn-primary">다시 도전하기</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
