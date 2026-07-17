@@ -206,15 +206,16 @@ function setupAuthObserver() {
       document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
       document.getElementById('user-name').textContent = user.displayName || '학습자';
       
-      // [관리자 계정 감지] 대소문자 무시(toLowerCase) 비교 적용
+      // [관리자 계정 감지] 23narucho 및 23navucho 오타 대처형 대소문자 무시 판별
       const userEmail = (user.email || '').toLowerCase();
       const userName = (user.displayName || '').toLowerCase();
-      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho");
+      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho") ||
+                      userEmail.startsWith("23navucho") || userName.includes("23navucho");
       
       if (isAdmin && btnAdminLink) {
-        btnAdminLink.classList.remove('hidden'); // 관리자 이동 버튼 표시
+        btnAdminLink.style.display = "inline-flex"; // 관리자면 강제로 표출
       } else if (btnAdminLink) {
-        btnAdminLink.classList.add('hidden');
+        btnAdminLink.style.display = "none"; // 일반 사용자는 강제로 은폐
       }
       
       // 시작 버튼 활성화 및 명칭 변경
@@ -227,7 +228,7 @@ function setupAuthObserver() {
       loginBox.classList.remove('hidden');
       
       if (btnAdminLink) {
-        btnAdminLink.classList.add('hidden');
+        btnAdminLink.style.display = "none"; // 로그아웃 시 강제 은폐
       }
       
       // 시작 버튼 비활성화 및 안내 문구 노출

@@ -206,10 +206,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 실시간 사용자 로그인 인증 감시
   auth.onAuthStateChanged(user => {
     if (user) {
-      // 23narucho 대소문자 무시 검증
+      // 23narucho 및 23navucho 대소문자 무시 검증
       const userEmail = (user.email || '').toLowerCase();
       const userName = (user.displayName || '').toLowerCase();
-      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho");
+      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho") ||
+                      userEmail.startsWith("23navucho") || userName.includes("23navucho");
 
       if (isAdmin) {
         // [검증 통과]: 교사 관리자임이 확인되었으므로 성적 데이터 조회 구동
