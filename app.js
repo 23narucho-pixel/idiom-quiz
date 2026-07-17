@@ -5,12 +5,13 @@
  */
 // TODO: 사용자님의 파이어베이스 프로젝트 설정값으로 대체해 주세요!
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "YOUR_AUTH_DOMAIN_HERE",
-  projectId: "YOUR_PROJECT_ID_HERE",
-  storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
-  appId: "YOUR_APP_ID_HERE"
+  apiKey: "AIzaSyBkkp_1uu2yq_gvIvm4FEu1o7Z6yDm9PPU",
+  authDomain: "idiom-quiz-1d21d.firebaseapp.com",
+  projectId: "idiom-quiz-1d21d",
+  storageBucket: "idiom-quiz-1d21d.firebasestorage.app",
+  messagingSenderId: "252362211165",
+  appId: "1:252362211165:web:4e56da609b990ffa5032b4",
+  measurementId: "G-L8YC96GZZ3"
 };
 
 // 파이어베이스가 웹 페이지에 올바르게 로드되었는지 확인하고 초기화 진행
