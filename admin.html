@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교사용 학생 성적 대시보드 - 관용표현 퀴즈</title>
+  
+  <!-- 구글 폰트 연동 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- 스타일시트 연동 (캐시 버스팅 버전) -->
+  <link rel="stylesheet" href="style.css?v=2.0">
+  
+  <!-- Firebase SDK CDN 연결 (Compat 모드로 관리자용 연동 최적화) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <div class="admin-container">
+    
+    <!-- 퀴즈 홈으로 이동하는 링크 -->
+    <a href="index.html" class="admin-back-link">
+      <span>⬅️</span> 퀴즈 홈으로 가기
+    </a>
+    
+    <div class="admin-card">
+      
+      <!-- 제목 영역 -->
+      <div class="admin-title-area">
+        <h1 class="admin-main-title">
+          📊 <span class="gradient-text">학생 성적 관리 대시보드</span>
+        </h1>
+        <p class="admin-subtitle">학생들의 퀴즈 도전 이력과 정/오답 성적 통계를 실시간으로 모니터링합니다.</p>
+      </div>
+
+      <!-- 상단 요약 통계 그리드 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">총 도전 횟수</div>
+          <div id="total-count" class="stat-value">0회</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">평균 점수</div>
+          <div id="average-score" class="stat-value">0점</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">만점자(100점) 수</div>
+          <div id="perfect-count" class="stat-value">0명</div>
+        </div>
+      </div>
+
+      <!-- 검색 및 정렬 필터 영역 -->
+      <div class="filter-controls">
+        <input type="text" id="search-input" class="search-input" placeholder="🔍 학생 이름으로 검색해 보세요...">
+        
+        <select id="sort-select" class="sort-select">
+          <option value="time-desc">최신 제출순</option>
+          <option value="time-asc">과거 제출순</option>
+          <option value="score-desc">점수 높은순</option>
+          <option value="score-asc">점수 낮은순</option>
+          <option value="name-asc">이름 가나다순</option>
+        </select>
+      </div>
+
+      <!-- 성적 리스트 데이터 테이블 -->
+      <div class="table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>제출 시간</th>
+              <th>학생 이름</th>
+              <th>이메일 주소</th>
+              <th>맞힌 개수</th>
+              <th>최종 점수</th>
+            </tr>
+          </thead>
+          <tbody id="admin-tbody">
+            <tr>
+              <td colspan="5" class="table-empty">실시간으로 성적 데이터를 불러오는 중입니다...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 관리자 기능 처리 스크립트 연동 (캐시 버스팅 및 지연 실행) -->
+  <script defer src="admin.js?v=2.0"></script>
+</body>
+</html>

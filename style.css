@@ -804,3 +804,206 @@ body {
     font-size: 2.3rem;
   }
 }
+
+/* -------------------------------------------------------------
+ * 10. 관리자 페이지(admin.html) 전용 라이트 모드 스타일
+ * ------------------------------------------------------------- */
+.admin-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.admin-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.admin-title-area {
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 20px;
+}
+
+.admin-main-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1a202c;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 6px;
+}
+
+/* 요약 지표 스탯 그리드 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.stat-card {
+  background-color: var(--primary-light);
+  border: 1.5px solid rgba(108, 99, 255, 0.15);
+  border-radius: var(--border-radius-md);
+  padding: 22px 20px;
+  text-align: center;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.stat-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  line-height: 1.1;
+}
+
+/* 필터 컨트롤 박스 */
+.filter-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 240px;
+  background-color: #ffffff;
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 14px 20px;
+  border-radius: var(--border-radius-md);
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  outline: none;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.sort-select {
+  background-color: #ffffff;
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 14px 20px;
+  border-radius: var(--border-radius-md);
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  outline: none;
+  cursor: pointer;
+  min-width: 180px;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.sort-select:focus {
+  border-color: var(--primary-color);
+}
+
+/* 관리자용 데이터 테이블 스타일 */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.admin-table th {
+  background-color: #f8f9fa;
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.admin-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.admin-table tr:hover td {
+  background-color: rgba(108, 99, 255, 0.015);
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-score {
+  font-weight: 800;
+  color: var(--primary-color);
+  background-color: var(--primary-light);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.badge-score-perfect {
+  color: var(--success-color);
+  background-color: var(--success-light);
+}
+
+/* 뒤로 가기 링크 스타일 */
+.admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 700;
+  margin-bottom: 25px;
+  transition: transform var(--transition-fast);
+  font-size: 0.95rem;
+}
+
+.admin-back-link:hover {
+  transform: translateX(-4px);
+}
+
+@media (max-width: 768px) {
+  .admin-card {
+    padding: 25px 15px;
+  }
+  
+  .admin-table th, .admin-table td {
+    padding: 12px 10px;
+    font-size: 0.85rem;
+  }
+}

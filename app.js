@@ -243,25 +243,45 @@ function saveScoreToFirestore(finalScore, selections) {
       answer: item.answer
     }));
 
-  const docData = {
+  // 1. 개인 보관용 성적 데이터 객체
+  const personalDocData = {
     score: finalScore,
     correctCount: correctCount,
     wrongAnswers: wrongAnswers,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp() // 서버 시간 기록
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  // 사용자 UID 하위에 scores 컬렉션을 생성해 성적 문서 추가
+  // 2. [추가] 교사 관리자용 통합 공용 성적 데이터 객체
+  const globalDocData = {
+    studentName: currentUser.displayName || '익명 학생',
+    studentEmail: currentUser.email || '이메일 정보 없음',
+    score: finalScore,
+    correctCount: correctCount,
+    wrongAnswers: wrongAnswers,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  // [이중 저장 1] 사용자 본인 UID 하위 개인 기록 저장
   db.collection("users")
     .doc(currentUser.uid)
     .collection("scores")
-    .add(docData)
+    .add(personalDocData)
     .then(docRef => {
-      console.log("성적 DB 저장 성공, ID:", docRef.id);
-      // 저장 성공 후 화면 하단 히스토리 표 리로드
-      loadPastScores();
+      console.log("개인 성적 DB 저장 완료, ID:", docRef.id);
+      loadPastScores(); // 내 과거 기록 표 갱신
     })
     .catch(error => {
-      console.error("성적 DB 저장 실패:", error);
+      console.error("개인 성적 DB 저장 실패:", error);
+    });
+
+  // [이중 저장 2] 교사용 전체 성적 공용 컬렉션 저장
+  db.collection("global_scores")
+    .add(globalDocData)
+    .then(docRef => {
+      console.log("교사용 공용 성적 DB 저장 완료, ID:", docRef.id);
+    })
+    .catch(error => {
+      console.error("교사용 공용 성적 DB 저장 실패:", error);
     });
 }
 
