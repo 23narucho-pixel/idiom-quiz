@@ -17,11 +17,17 @@ const firebaseConfig = {
 // 파이어베이스가 웹 페이지에 올바르게 로드되었는지 확인하고 초기화 진행
 let auth, db;
 if (typeof firebase !== 'undefined') {
-  firebase.initializeApp(firebaseConfig);
-  auth = firebase.auth();
-  db = firebase.firestore();
+  try {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+  } catch (error) {
+    console.error("Firebase 초기화 에러:", error);
+    alert("파이어베이스 설정 초기화 중 오류가 발생했습니다: " + error.message);
+  }
 } else {
-  console.warn("Firebase SDK가 로드되지 않았습니다. 인터넷 연결이나 CDN 스크립트 태그를 확인해 주세요.");
+  console.warn("Firebase SDK가 로드되지 않았습니다.");
+  alert("구글 파이어베이스 프로그램(SDK)이 브라우저에 로드되지 않았습니다.\n\n인터넷이 불안정하거나 브라우저 캐시가 꼬였을 수 있으니, 창을 완전히 닫고 다시 열거나 강력 새로고침(Ctrl + F5)을 눌러주세요.");
 }
 
 /**
