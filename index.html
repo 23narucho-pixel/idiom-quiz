@@ -22,20 +22,6 @@
     <!-- 1. 메인 시작 화면 -->
     <section id="screen-start" class="screen active">
       <div class="card start-card">
-        <!-- 상단 유저 인증 상태 표시기 -->
-        <div id="auth-container" class="auth-bar">
-          <div id="user-info" class="user-info-box hidden">
-            <img id="user-photo" src="" alt="프로필 사진" class="profile-img">
-            <span id="user-name" class="profile-name">사용자명</span>
-            <button id="btn-logout" class="btn-text">로그아웃</button>
-          </div>
-          <div id="login-box" class="login-box-container">
-            <button id="btn-login-google" class="btn btn-google">
-              <span class="g-icon">⚙️</span> Google 계정으로 로그인
-            </button>
-          </div>
-        </div>
-
         <div class="badge neon-badge">AI 스마트 챌린지</div>
         <h1 class="main-title">
           <span class="gradient-text">관용표현 퀴즈</span>
@@ -51,6 +37,25 @@
         
         <!-- 로그인 상태에 따라 시작 버튼이 켜집니다 -->
         <button id="btn-start" class="btn btn-primary btn-large" disabled>로그인 후 도전하기</button>
+
+        <!-- [레이아웃 변경] 시작하기 버튼 아래로 이동 및 프리미엄 구조로 보강된 로그인 컨테이너 -->
+        <div id="auth-container" class="auth-bar-bottom">
+          <div id="user-info" class="user-info-box-premium hidden">
+            <div class="user-profile-header">
+              <img id="user-photo" src="" alt="프로필 사진" class="profile-img-premium">
+              <div class="user-profile-details">
+                <span class="user-status-label">인증된 사용자</span>
+                <span id="user-name" class="profile-name-premium">사용자명</span>
+              </div>
+            </div>
+            <button id="btn-logout" class="btn btn-logout-premium">로그아웃</button>
+          </div>
+          <div id="login-box" class="login-box-container">
+            <button id="btn-login-google" class="btn btn-google-premium">
+              <span class="g-icon">⚙️</span> Google 계정으로 로그인
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 

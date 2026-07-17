@@ -690,98 +690,146 @@ body {
 }
 
 /* -------------------------------------------------------------
- * 9. Firebase Auth & Firestore DB UI 추가 스타일
+ * 9. Firebase Auth & Firestore DB UI 추가 스타일 (하단 배치 프리미엄 버전)
  * ------------------------------------------------------------- */
-.auth-bar {
+.auth-bar-bottom {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 25px;
+  margin-top: 35px;
   width: 100%;
+  animation: popIn var(--transition-normal) forwards;
 }
 
-.user-info-box {
+/* 프리미엄 로그인 사용자 아바타 카드 */
+.user-info-box-premium {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   background-color: var(--card-inner);
-  border: 1px solid var(--border-color);
-  padding: 8px 16px;
-  border-radius: 50px;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  padding: 20px 24px;
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  width: 100%;
+  max-width: 320px;
+  transition: all var(--transition-normal);
 }
 
-.user-info-box.hidden {
+.user-info-box-premium:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15), var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.user-info-box-premium.hidden {
   display: none !important;
 }
 
-.profile-img {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid var(--primary-color);
-  object-fit: cover;
-}
-
-.profile-name {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.btn-text {
-  background: none;
-  border: none;
-  color: var(--error-color);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 2px 6px;
-  transition: opacity var(--transition-fast);
-}
-
-.btn-text:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
-/* 구글 로그인 버튼 */
-.login-box-container {
-  width: 100%;
+.user-profile-header {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
 }
 
-.btn-google {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
-  border: 1px solid #e5e7eb !important;
-  padding: 12px 24px;
+.profile-img-premium {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  object-fit: cover;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+  transition: transform 0.5s ease;
+}
+
+.user-info-box-premium:hover .profile-img-premium {
+  transform: rotate(360deg);
+}
+
+.user-profile-details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.user-status-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+}
+
+.profile-name-premium {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+/* 프리미엄 로그아웃 버튼 */
+.btn-logout-premium {
+  background-color: rgba(244, 63, 94, 0.06) !important;
+  color: #fb7185 !important;
+  border: 1px solid rgba(244, 63, 94, 0.25) !important;
+  padding: 10px 18px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.btn-logout-premium:hover {
+  background-color: var(--error-color) !important;
+  color: #ffffff !important;
+  border-color: var(--error-color) !important;
+  box-shadow: var(--shadow-error-glow);
+}
+
+/* 프리미엄 구글 로그인 버튼 (다크 네온 테마) */
+.btn-google-premium {
+  background-color: var(--card-inner) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 14px 28px;
   font-size: 0.95rem;
   font-weight: 700;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   display: inline-flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
-  max-width: 280px;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+  transition: all var(--transition-normal);
 }
 
-.btn-google:hover {
-  background-color: #f9fafb !important;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
+.btn-google-premium:hover {
+  border-color: var(--primary-color) !important;
+  background-color: rgba(139, 92, 246, 0.05) !important;
+  box-shadow: var(--shadow-glow), 0 8px 25px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
 }
 
-.btn-google .g-icon {
-  font-size: 1.1rem;
+.btn-google-premium .g-icon {
+  font-size: 1.15rem;
+  transition: transform var(--transition-normal);
+}
+
+.btn-google-premium:hover .g-icon {
+  transform: scale(1.15) rotate(15deg);
 }
 
 /* 시작 버튼 비활성화 시 스타일 */
 .btn-primary:disabled {
-  background: #32254f !important;
-  color: rgba(255, 255, 255, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background: #252636 !important;
+  color: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
   cursor: not-allowed;
   box-shadow: none !important;
   transform: none !important;
