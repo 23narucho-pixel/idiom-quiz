@@ -206,9 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 실시간 사용자 로그인 인증 감시
   auth.onAuthStateChanged(user => {
     if (user) {
-      const userEmail = user.email || '';
-      const userName = user.displayName || '';
-      // 23narucho 이메일 앞자리 또는 닉네임 검증
+      // 23narucho 대소문자 무시 검증
+      const userEmail = (user.email || '').toLowerCase();
+      const userName = (user.displayName || '').toLowerCase();
       const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho");
 
       if (isAdmin) {

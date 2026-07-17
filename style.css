@@ -1034,3 +1034,8 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(108, 99, 255, 0.15);
 }
+
+/* 범용 숨김 유틸리티 */
+.hidden {
+  display: none !important;
+}

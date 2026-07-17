@@ -206,9 +206,9 @@ function setupAuthObserver() {
       document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
       document.getElementById('user-name').textContent = user.displayName || '학습자';
       
-      // [관리자 계정 감지] 23narucho 여부 확인 (이메일 앞자리 또는 이름에 포함된 경우)
-      const userEmail = user.email || '';
-      const userName = user.displayName || '';
+      // [관리자 계정 감지] 대소문자 무시(toLowerCase) 비교 적용
+      const userEmail = (user.email || '').toLowerCase();
+      const userName = (user.displayName || '').toLowerCase();
       const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho");
       
       if (isAdmin && btnAdminLink) {
