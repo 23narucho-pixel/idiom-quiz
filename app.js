@@ -194,6 +194,7 @@ function setupAuthObserver() {
     const userInfoBox = document.getElementById('user-info');
     const loginBox = document.getElementById('login-box');
     const btnStart = document.getElementById('btn-start');
+    const btnAdminLink = document.getElementById('btn-admin-link');
     
     if (user) {
       // 1. 로그인 상태인 경우
@@ -205,6 +206,17 @@ function setupAuthObserver() {
       document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
       document.getElementById('user-name').textContent = user.displayName || '학습자';
       
+      // [관리자 계정 감지] 23narucho 여부 확인 (이메일 앞자리 또는 이름에 포함된 경우)
+      const userEmail = user.email || '';
+      const userName = user.displayName || '';
+      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho");
+      
+      if (isAdmin && btnAdminLink) {
+        btnAdminLink.classList.remove('hidden'); // 관리자 이동 버튼 표시
+      } else if (btnAdminLink) {
+        btnAdminLink.classList.add('hidden');
+      }
+      
       // 시작 버튼 활성화 및 명칭 변경
       btnStart.disabled = false;
       btnStart.textContent = "시작하기";
@@ -213,6 +225,10 @@ function setupAuthObserver() {
       currentUser = null;
       userInfoBox.classList.add('hidden');
       loginBox.classList.remove('hidden');
+      
+      if (btnAdminLink) {
+        btnAdminLink.classList.add('hidden');
+      }
       
       // 시작 버튼 비활성화 및 안내 문구 노출
       btnStart.disabled = true;

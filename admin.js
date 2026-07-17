@@ -14,10 +14,11 @@ const firebaseConfig = {
 };
 
 // 파이어베이스 초기화
-let db;
+let auth, db;
 if (typeof firebase !== 'undefined') {
   try {
     firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
     db = firebase.firestore();
   } catch (error) {
     console.error("Firebase 초기화 에러:", error);
@@ -192,20 +193,46 @@ function renderTable(dataList) {
 
 /**
  * =============================================================
- * 7. 이벤트 바인딩 및 페이지 초기화
+ * 7. 이벤트 바인딩 및 관리자 보안(Auth) 검증 연동
  * =============================================================
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. 최초 데이터 로딩
-  loadAllStudentScores();
+  if (!auth) {
+    alert("파이어베이스 인증(Auth) 모듈을 불러오지 못했습니다. 메인 페이지로 이동합니다.");
+    window.location.href = "index.html";
+    return;
+  }
 
-  // 2. 검색창 실시간 타이핑 입력 이벤트 바인딩
+  // 실시간 사용자 로그인 인증 감시
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      const userEmail = user.email || '';
+      const userName = user.displayName || '';
+      // 23narucho 이메일 앞자리 또는 닉네임 검증
+      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho");
+
+      if (isAdmin) {
+        // [검증 통과]: 교사 관리자임이 확인되었으므로 성적 데이터 조회 구동
+        loadAllStudentScores();
+      } else {
+        // [비인가 차단]: 다른 일반 계정은 접근 불허 및 메인으로 강제 팅겨내기
+        alert("교사용 대시보드 접근 권한이 없습니다.\n관리자 계정(23narucho)으로 구글 로그인을 진행해 주세요.");
+        window.location.href = "index.html";
+      }
+    } else {
+      // [미로그인 차단]: 로그인을 전혀 안 한 상태는 메인 로그인 화면으로 이동
+      alert("로그인이 만료되었습니다. 관리자 계정으로 먼저 구글 로그인을 완료해 주세요.");
+      window.location.href = "index.html";
+    }
+  });
+
+  // 검색창 실시간 타이핑 입력 이벤트 바인딩
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     searchInput.addEventListener('input', applyFilters);
   }
 
-  // 3. 정렬 셀렉트 박스 선택 변경 이벤트 바인딩
+  // 정렬 셀렉트 박스 선택 변경 이벤트 바인딩
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) {
     sortSelect.addEventListener('change', applyFilters);
