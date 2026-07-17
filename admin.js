@@ -75,6 +75,7 @@ function loadAllStudentScores() {
     })
     .catch(error => {
       console.error("전체 성적 로딩 실패:", error);
+      alert("전체 성적 데이터를 불러오는 데 실패했습니다:\n" + error.message + "\n\n(파이어베이스 Rules 규칙 설정에서 읽기 권한이 켜져 있는지 확인해 주세요!)");
       tbody.innerHTML = `
         <tr>
           <td colspan="5" class="table-empty" style="color:var(--error-color);">

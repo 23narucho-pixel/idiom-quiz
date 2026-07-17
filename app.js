@@ -289,6 +289,7 @@ function saveScoreToFirestore(finalScore, selections) {
     })
     .catch(error => {
       console.error("개인 성적 DB 저장 실패:", error);
+      alert("개인 성적 데이터 저장에 실패했습니다:\n" + error.message);
     });
 
   // [이중 저장 2] 교사용 전체 성적 공용 컬렉션 저장
@@ -299,6 +300,7 @@ function saveScoreToFirestore(finalScore, selections) {
     })
     .catch(error => {
       console.error("교사용 공용 성적 DB 저장 실패:", error);
+      alert("교사용 대시보드용 성적 데이터 저장에 실패했습니다:\n" + error.message + "\n\n(파이어베이스 Rules 규칙 설정에서 쓰기 권한이 켜져 있는지 확인해 주세요!)");
     });
 }
 
