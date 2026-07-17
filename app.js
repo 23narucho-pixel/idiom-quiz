@@ -551,6 +551,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnGoogleLogin) btnGoogleLogin.addEventListener('click', loginWithGoogle);
   if (btnLogout) btnLogout.addEventListener('click', logout);
 
+  // 홈으로 가기 버튼 바인딩
+  const btnGoHome = document.getElementById('btn-go-home');
+  if (btnGoHome) btnGoHome.addEventListener('click', () => showScreen('screen-start'));
+
   // 파이어베이스 구동을 위한 감시자 세팅
   setupAuthObserver();
 });
