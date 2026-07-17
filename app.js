@@ -206,11 +206,9 @@ function setupAuthObserver() {
       document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
       document.getElementById('user-name').textContent = user.displayName || '학습자';
       
-      // [관리자 계정 감지] 23narucho 및 23navucho 오타 대처형 대소문자 무시 판별
+      // [관리자 계정 감지] 23narucho@gmail.com 단 하나의 메일 계정만 엄격하게 관리자로 승인
       const userEmail = (user.email || '').toLowerCase();
-      const userName = (user.displayName || '').toLowerCase();
-      const isAdmin = userEmail.startsWith("23narucho") || userName.includes("23narucho") ||
-                      userEmail.startsWith("23navucho") || userName.includes("23navucho");
+      const isAdmin = (userEmail === "23narucho@gmail.com");
       
       if (isAdmin && btnAdminLink) {
         btnAdminLink.style.display = "inline-flex"; // 관리자면 강제로 표출
