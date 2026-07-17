@@ -688,3 +688,163 @@ body {
     font-size: 2.8rem;
   }
 }
+
+/* -------------------------------------------------------------
+ * 9. Firebase Auth & Firestore DB UI 추가 스타일
+ * ------------------------------------------------------------- */
+.auth-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.user-info-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--card-inner);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-sm);
+}
+
+.user-info-box.hidden {
+  display: none !important;
+}
+
+.profile-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--primary-color);
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--error-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-text:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* 구글 로그인 버튼 */
+.login-box-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-google {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #e5e7eb !important;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 280px;
+}
+
+.btn-google:hover {
+  background-color: #f9fafb !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.btn-google .g-icon {
+  font-size: 1.1rem;
+}
+
+/* 시작 버튼 비활성화 시 스타일 */
+.btn-primary:disabled {
+  background: #32254f !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* 과거 이력 섹션 스타일 */
+.history-section {
+  text-align: left;
+  border-top: 1px solid var(--border-color);
+  padding-top: 35px;
+  margin-top: 35px;
+  margin-bottom: 20px;
+}
+
+.history-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--text-primary);
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--card-inner);
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.history-table th {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.history-table td {
+  padding: 14px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+}
+
+.history-table tr:last-child td {
+  border-bottom: none;
+}
+
+.history-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+.table-empty {
+  color: var(--text-muted) !important;
+  font-style: italic;
+  padding: 30px 10px !important;
+}

@@ -1,6 +1,31 @@
 /**
  * =============================================================
- * 1. 문제 은행 데이터 정의 (초등학교 6학년 수준 관용표현 10문항)
+ * 1. 파이어베이스(Firebase) 설정 및 초기화
+ * =============================================================
+ */
+// TODO: 사용자님의 파이어베이스 프로젝트 설정값으로 대체해 주세요!
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "YOUR_AUTH_DOMAIN_HERE",
+  projectId: "YOUR_PROJECT_ID_HERE",
+  storageBucket: "YOUR_STORAGE_BUCKET_HERE",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
+  appId: "YOUR_APP_ID_HERE"
+};
+
+// 파이어베이스가 웹 페이지에 올바르게 로드되었는지 확인하고 초기화 진행
+let auth, db;
+if (typeof firebase !== 'undefined') {
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+} else {
+  console.warn("Firebase SDK가 로드되지 않았습니다. 인터넷 연결이나 CDN 스크립트 태그를 확인해 주세요.");
+}
+
+/**
+ * =============================================================
+ * 2. 문제 은행 데이터 정의 (초등학교 6학년 수준 관용표현 10문항)
  * =============================================================
  */
 const questionBank = [
@@ -88,20 +113,20 @@ const questionBank = [
 
 /**
  * =============================================================
- * 2. 전역 상태 및 게임 변수 정의
+ * 3. 전역 상태 및 게임 변수 정의
  * =============================================================
  */
 let currentQuizSet = []; // 이번 퀴즈 세트 (무작위 5문항)
 let currentQuestionIndex = 0; // 현재 진행 중인 문제 인덱스 (0 ~ 4)
 let score = 0; // 맞힌 개수 기반 점수
 let userSelections = []; // 사용자가 풀이한 정/오답 기록 저장용 배열
+let currentUser = null; // 로그인된 사용자 객체 정보 저장
 
 /**
  * =============================================================
- * 3. 헬퍼 함수 (셔플 알고리즘)
+ * 4. 헬퍼 함수 (셔플 알고리즘)
  * =============================================================
  */
-// 피셔-예이츠 셔플(Fisher-Yates Shuffle) 구현
 function shuffleArray(array) {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -113,16 +138,14 @@ function shuffleArray(array) {
 
 /**
  * =============================================================
- * 4. 화면 전환 제어 함수
+ * 5. 화면 전환 제어 함수
  * =============================================================
  */
 function showScreen(screenId) {
-  // 모든 screen 요소에서 active 클래스를 제거하고 숨김
   document.querySelectorAll('.screen').forEach(screen => {
     screen.classList.remove('active');
   });
 
-  // 목표 screen을 표시하고 active 클래스를 추가해 서서히 페이드인 시킴
   const targetScreen = document.getElementById(screenId);
   if (targetScreen) {
     targetScreen.classList.add('active');
@@ -131,22 +154,181 @@ function showScreen(screenId) {
 
 /**
  * =============================================================
- * 5. 퀴즈 게임 로직
+ * 6. 파이어베이스 인증 (Authentication) 및 사용자 관리
+ * =============================================================
+ */
+
+// 구글 로그인 팝업 호출
+function loginWithGoogle() {
+  if (!auth) return alert("파이어베이스 설정이 완료되지 않았습니다.");
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(result => {
+      console.log("로그인 성공:", result.user.displayName);
+    })
+    .catch(error => {
+      console.error("로그인 실패:", error.message);
+      alert("로그인 도중 문제가 발생했습니다: " + error.message);
+    });
+}
+
+// 로그아웃 처리
+function logout() {
+  if (!auth) return;
+  auth.signOut().then(() => {
+    console.log("로그아웃 성공");
+  });
+}
+
+// 사용자 로그인 인증 상태 변경 실시간 감시자(Observer)
+function setupAuthObserver() {
+  if (!auth) return;
+  auth.onAuthStateChanged(user => {
+    const userInfoBox = document.getElementById('user-info');
+    const loginBox = document.getElementById('login-box');
+    const btnStart = document.getElementById('btn-start');
+    
+    if (user) {
+      // 1. 로그인 상태인 경우
+      currentUser = user;
+      userInfoBox.classList.remove('hidden');
+      loginBox.classList.add('hidden');
+      
+      // 프로필 정보 매칭
+      document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
+      document.getElementById('user-name').textContent = user.displayName || '학습자';
+      
+      // 시작 버튼 활성화 및 명칭 변경
+      btnStart.disabled = false;
+      btnStart.textContent = "시작하기";
+    } else {
+      // 2. 로그아웃 상태인 경우
+      currentUser = null;
+      userInfoBox.classList.add('hidden');
+      loginBox.classList.remove('hidden');
+      
+      // 시작 버튼 비활성화 및 안내 문구 노출
+      btnStart.disabled = true;
+      btnStart.textContent = "로그인 후 도전하기";
+    }
+  });
+}
+
+/**
+ * =============================================================
+ * 7. 파이어베이스 데이터베이스 (Cloud Firestore) 성적 제어
+ * =============================================================
+ */
+
+// 퀴즈 결과 점수 및 오답 리스트를 Firestore에 저장
+function saveScoreToFirestore(finalScore, selections) {
+  if (!db || !currentUser) return;
+
+  // 맞힌 개수 계산
+  const correctCount = selections.filter(item => item.isCorrect).length;
+  
+  // 저장할 오답 데이터 요약 정리
+  const wrongAnswers = selections
+    .filter(item => !item.isCorrect)
+    .map(item => ({
+      idiom: item.idiom,
+      selected: item.selected,
+      answer: item.answer
+    }));
+
+  const docData = {
+    score: finalScore,
+    correctCount: correctCount,
+    wrongAnswers: wrongAnswers,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp() // 서버 시간 기록
+  };
+
+  // 사용자 UID 하위에 scores 컬렉션을 생성해 성적 문서 추가
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("scores")
+    .add(docData)
+    .then(docRef => {
+      console.log("성적 DB 저장 성공, ID:", docRef.id);
+      // 저장 성공 후 화면 하단 히스토리 표 리로드
+      loadPastScores();
+    })
+    .catch(error => {
+      console.error("성적 DB 저장 실패:", error);
+    });
+}
+
+// 퀴즈 완료 시 과거 이력(최근 5회) 데이터베이스에서 불러오기
+function loadPastScores() {
+  if (!db || !currentUser) return;
+
+  const historyListContainer = document.getElementById('history-list');
+  
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("scores")
+    .orderBy("timestamp", "desc")
+    .limit(5)
+    .get()
+    .then(querySnapshot => {
+      historyListContainer.innerHTML = ''; // 테이블 내용 초기화
+
+      if (querySnapshot.empty) {
+        historyListContainer.innerHTML = `
+          <tr>
+            <td colspan="3" class="table-empty">아직 도전한 기록이 없습니다. 첫 퀴즈를 완료해 보세요!</td>
+          </tr>
+        `;
+        return;
+      }
+
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        const dateObj = data.timestamp ? data.timestamp.toDate() : new Date();
+        const dateString = dateObj.toLocaleDateString("ko-KR", {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${dateString}</td>
+          <td>${data.correctCount} / 5</td>
+          <td><span class="gradient-text" style="font-weight:700;">${data.score}점</span></td>
+        `;
+        historyListContainer.appendChild(tr);
+      });
+    })
+    .catch(error => {
+      console.error("히스토리 로드 실패:", error);
+      historyListContainer.innerHTML = `
+        <tr>
+          <td colspan="3" class="table-empty" style="color:var(--error-color) !important;">
+            기록을 불러오지 못했습니다.
+          </td>
+        </tr>
+      `;
+    });
+}
+
+/**
+ * =============================================================
+ * 8. 퀴즈 게임 인터랙션 로직
  * =============================================================
  */
 
 // 퀴즈 시작 (초기화 및 문제 추출)
 function startQuiz() {
-  // 1. 상태 초기화
   currentQuestionIndex = 0;
   score = 0;
   userSelections = [];
 
-  // 2. 문제 은행에서 무작위로 5문제 선정 (Fisher-Yates)
   const shuffledBank = shuffleArray(questionBank);
   currentQuizSet = shuffledBank.slice(0, 5);
 
-  // 3. 첫 번째 문제 표시
   renderQuestion();
   showScreen('screen-quiz');
 }
@@ -155,7 +337,6 @@ function startQuiz() {
 function renderQuestion() {
   const currentQuestion = currentQuizSet[currentQuestionIndex];
   
-  // 프로그레스 바 및 텍스트 업데이트
   const progressText = document.getElementById('quiz-progress-text');
   const progressFill = document.getElementById('quiz-progress-fill');
   const currentNum = currentQuestionIndex + 1;
@@ -163,42 +344,35 @@ function renderQuestion() {
   progressText.textContent = `${currentNum} / 5`;
   progressFill.style.width = `${(currentNum / 5) * 100}%`;
 
-  // 문제 번호와 질문 텍스트 삽입
   document.getElementById('question-number').textContent = `Q${currentNum}.`;
   document.getElementById('quiz-question').textContent = currentQuestion.question;
 
-  // 보기(4지선다) 목록 셔플 후 동적 생성
   const shuffledOptions = shuffleArray(currentQuestion.options);
   const optionsContainer = document.getElementById('quiz-options');
-  optionsContainer.innerHTML = ''; // 이전 보기 비우기
+  optionsContainer.innerHTML = '';
 
   shuffledOptions.forEach((optionText, index) => {
     const button = document.createElement('button');
     button.className = 'option-btn';
-    
-    // 번호와 보기 텍스트 결합
     button.innerHTML = `
       <span class="option-num">${index + 1}</span>
       <span class="option-text">${optionText}</span>
     `;
 
-    // 보기 클릭 이벤트 핸들러 바인딩
     button.addEventListener('click', () => handleOptionClick(button, optionText, currentQuestion));
     optionsContainer.appendChild(button);
   });
 }
 
-// 보기 클릭 처리 (채점, 애니메이션 및 스킵 지연)
+// 보기 클릭 처리
 function handleOptionClick(selectedButton, selectedText, currentQuestion) {
   const optionsContainer = document.getElementById('quiz-options');
   const buttons = optionsContainer.querySelectorAll('.option-btn');
 
-  // [오류 방지 1] 클릭하는 즉시 모든 보기 버튼 비활성화 (더블클릭 방지)
   buttons.forEach(btn => btn.disabled = true);
 
   const isCorrect = (selectedText === currentQuestion.answer);
 
-  // 사용자 풀이 결과 기록 저장
   userSelections.push({
     question: currentQuestion.question,
     idiom: currentQuestion.idiom,
@@ -209,28 +383,23 @@ function handleOptionClick(selectedButton, selectedText, currentQuestion) {
     isCorrect: isCorrect
   });
 
-  // 채점 시각 피드백 제공
   buttons.forEach(btn => {
     const btnTextElement = btn.querySelector('.option-text');
     const btnText = btnTextElement ? btnTextElement.textContent : '';
 
     if (btnText === currentQuestion.answer) {
-      // 정답 버튼은 초록색 처리
       btn.classList.add('selected-correct');
     } else if (btn === selectedButton && !isCorrect) {
-      // 틀렸다면 사용자가 클릭한 것만 빨간색 처리
       btn.classList.add('selected-incorrect');
     } else {
-      // 그 외 보기들은 희미하게 투명화 처리
       btn.classList.add('dimmed');
     }
   });
 
   if (isCorrect) {
-    score += 20; // 한 문제당 20점 계산
+    score += 20;
   }
 
-  // [오류 방지 2] 애니메이션 감상 및 정답 상태 확인 후 부드럽게 화면 이동 (0.8초 대기)
   setTimeout(() => {
     currentQuestionIndex++;
     if (currentQuestionIndex < 5) {
@@ -241,16 +410,10 @@ function handleOptionClick(selectedButton, selectedText, currentQuestion) {
   }, 800);
 }
 
-/**
- * =============================================================
- * 6. 결과 화면 및 오답 노트 렌더링
- * =============================================================
- */
+// 결과 화면 및 오답 노트 렌더링
 function showResult() {
-  // 1. 점수 출력
   const scoreElement = document.getElementById('result-score');
   
-  // 점수가 서서히 올라가는 텍스트 효과 (점수 카운트업)
   let count = 0;
   scoreElement.textContent = '0';
   
@@ -260,14 +423,13 @@ function showResult() {
       scoreElement.textContent = count;
       if (count >= score) {
         clearInterval(countInterval);
-        scoreElement.textContent = score; // 최종 고정
+        scoreElement.textContent = score;
       }
     }, 40);
   } else {
     scoreElement.textContent = '0';
   }
 
-  // 2. 점수별 메시지 피드백
   const messageElement = document.getElementById('result-message');
   if (score === 100) {
     messageElement.innerHTML = '🎉 <strong>만점입니다!</strong> 관용표현 박사님이시네요! 모든 표현을 완벽하게 알고 계셔요.';
@@ -279,18 +441,15 @@ function showResult() {
     messageElement.innerHTML = '📚 <strong>공부가 조금 더 필요해요!</strong> 아래 오답 노트를 보며 관용표현의 정확한 뜻을 배워 볼까요?';
   }
 
-  // 3. 오답 노트를 동적으로 렌더링
   const reviewListContainer = document.getElementById('review-list');
-  reviewListContainer.innerHTML = ''; // 기존 콘텐츠 초기화
+  reviewListContainer.innerHTML = '';
 
   userSelections.forEach((item, index) => {
     const reviewItem = document.createElement('div');
     reviewItem.className = `review-item ${item.isCorrect ? 'correct' : 'incorrect'}`;
 
-    // 오답 전용 상세 레이아웃 빌드
     const statusText = item.isCorrect ? '정답' : '오답';
     
-    // 오답일 때만 사용자 선택지와 정답을 함께 표시하여 가시성 증대
     let answerComparisonHTML = '';
     if (!item.isCorrect) {
       answerComparisonHTML = `
@@ -323,12 +482,15 @@ function showResult() {
     reviewListContainer.appendChild(reviewItem);
   });
 
+  // [파이어베이스 동작] 결과 화면 렌더링 시 성적 데이터를 Firestore 데이터베이스에 백그라운드로 안전하게 자동 저장
+  saveScoreToFirestore(score, userSelections);
+  
   showScreen('screen-result');
 }
 
 /**
  * =============================================================
- * 7. 이벤트 리스너 연결 및 초기화
+ * 9. 이벤트 리스너 연결 및 초기화
  * =============================================================
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -337,4 +499,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // 재시작 버튼 바인딩
   document.getElementById('btn-restart').addEventListener('click', startQuiz);
+
+  // 구글 로그인 및 로그아웃 버튼 바인딩
+  const btnGoogleLogin = document.getElementById('btn-login-google');
+  const btnLogout = document.getElementById('btn-logout');
+  
+  if (btnGoogleLogin) btnGoogleLogin.addEventListener('click', loginWithGoogle);
+  if (btnLogout) btnLogout.addEventListener('click', logout);
+
+  // 파이어베이스 구동을 위한 감시자 세팅
+  setupAuthObserver();
 });

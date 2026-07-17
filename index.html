@@ -9,26 +9,48 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  
+  <!-- =============================================================
+   * Firebase SDK CDN 연결 (Compat 모드 사용으로 정적 JS 연동 최적화)
+   * ============================================================= -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="container">
     <!-- 1. 메인 시작 화면 -->
     <section id="screen-start" class="screen active">
       <div class="card start-card">
+        <!-- 상단 유저 인증 상태 표시기 -->
+        <div id="auth-container" class="auth-bar">
+          <div id="user-info" class="user-info-box hidden">
+            <img id="user-photo" src="" alt="프로필 사진" class="profile-img">
+            <span id="user-name" class="profile-name">사용자명</span>
+            <button id="btn-logout" class="btn-text">로그아웃</button>
+          </div>
+          <div id="login-box" class="login-box-container">
+            <button id="btn-login-google" class="btn btn-google">
+              <span class="g-icon">⚙️</span> Google 계정으로 로그인
+            </button>
+          </div>
+        </div>
+
         <div class="badge neon-badge">AI 스마트 챌린지</div>
         <h1 class="main-title">
           <span class="gradient-text">관용표현 퀴즈</span>
         </h1>
         <p class="subtitle">초등학교 6학년 수준의 필수 관용표현 5문제를 해결하고 학습해보세요.</p>
         
-        <!-- Jasper AI 느낌의 세련된 플로팅 프롬프트 칩 그래픽 -->
+        <!-- 플로팅 프롬프트 칩 그래픽 -->
         <div class="start-graphic">
           <div class="prompt-chip chip-1">#발이_넓다 👣</div>
           <div class="prompt-chip chip-2">#귀가_얇다 👂</div>
           <div class="prompt-chip chip-3">#쇠뿔도_단김에! 🐂</div>
         </div>
         
-        <button id="btn-start" class="btn btn-primary btn-large">시작하기</button>
+        <!-- 로그인 상태에 따라 시작 버튼이 켜집니다 -->
+        <button id="btn-start" class="btn btn-primary btn-large" disabled>로그인 후 도전하기</button>
       </div>
     </section>
 
@@ -77,6 +99,28 @@
           <h3 class="review-title">📝 오답 분석 보고서</h3>
           <div id="review-list" class="review-list">
             <!-- 자바스크립트로 푼 문항 정보(정오답 해설)가 렌더링됩니다 -->
+          </div>
+        </div>
+
+        <!-- 파이어베이스 데이터베이스 기반 나의 과거 도전 이력 섹션 -->
+        <div class="history-section">
+          <h3 class="history-title">📊 나의 과거 도전 기록 (최근 5회)</h3>
+          <div class="table-container">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>도전 날짜</th>
+                  <th>맞힌 문제</th>
+                  <th>최종 점수</th>
+                </tr>
+              </thead>
+              <tbody id="history-list">
+                <!-- 파이어베이스 Firestore에서 가져온 데이터가 동적 추가됩니다 -->
+                <tr>
+                  <td colspan="3" class="table-empty">로딩 중이거나 기록이 없습니다.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         
