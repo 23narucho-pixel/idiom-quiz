@@ -187,8 +187,8 @@ function renderTable(dataList) {
       <td style="color:var(--text-muted); font-size:0.88rem;">${item.studentEmail}</td>
       <td><strong>${item.correctCount} / 5 문항</strong></td>
       <td><span class="${scoreBadgeClass}">${item.score}점</span></td>
-      <td>
-        <button class="btn-delete-score" style="background-color:rgba(231,76,60,0.06); color:#e74c3c; border:1px solid rgba(231,76,60,0.22); padding:6px 12px; border-radius:6px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.15s ease;">🗑️ 삭제</button>
+      <td style="white-space: nowrap; text-align: center; width: 80px;">
+        <button class="btn-delete-score" style="background-color:rgba(231,76,60,0.06); color:#e74c3c; border:1px solid rgba(231,76,60,0.22); padding:4px 8px; border-radius:4px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.15s ease; white-space:nowrap; display:inline-flex; align-items:center; gap:2px;">🗑️ 삭제</button>
       </td>
     `;
 
