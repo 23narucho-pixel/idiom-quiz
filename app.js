@@ -246,7 +246,14 @@ function setupAuthObserver() {
 
 // 퀴즈 결과 점수 및 오답 리스트를 Firestore에 저장
 function saveScoreToFirestore(finalScore, selections) {
-  if (!db || !currentUser) return;
+  if (!db) {
+    alert("데이터베이스 연결 실패: 파이어베이스 DB(db)가 연결되지 않아 점수가 저장되지 않습니다.");
+    return;
+  }
+  if (!currentUser) {
+    alert("로그인 세션 유실: 로그인된 유저 정보(currentUser)가 확인되지 않아 점수가 저장되지 않습니다.\n\n다시 로그인을 해보시기 바랍니다.");
+    return;
+  }
 
   // 맞힌 개수 계산
   const correctCount = selections.filter(item => item.isCorrect).length;
