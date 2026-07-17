@@ -161,7 +161,7 @@ function renderTable(dataList) {
   if (dataList.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="5" class="table-empty">조회된 조건에 부합하는 학생 성적이 없습니다.</td>
+        <td colspan="6" class="table-empty">조회된 조건에 부합하는 학생 성적이 없습니다.</td>
       </tr>
     `;
     return;
@@ -187,9 +187,49 @@ function renderTable(dataList) {
       <td style="color:var(--text-muted); font-size:0.88rem;">${item.studentEmail}</td>
       <td><strong>${item.correctCount} / 5 문항</strong></td>
       <td><span class="${scoreBadgeClass}">${item.score}점</span></td>
+      <td>
+        <button class="btn-delete-score" style="background-color:rgba(231,76,60,0.06); color:#e74c3c; border:1px solid rgba(231,76,60,0.22); padding:6px 12px; border-radius:6px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.15s ease;">🗑️ 삭제</button>
+      </td>
     `;
+
+    // 삭제 버튼 클릭 동적 이벤트 바인딩
+    const btnDelete = tr.querySelector('.btn-delete-score');
+    if (btnDelete) {
+      btnDelete.addEventListener('click', () => deleteScoreRecord(item.id, item.studentName));
+    }
+
     tbody.appendChild(tr);
   });
+}
+
+/**
+ * =============================================================
+ * 6-2. [신규] 특정 학생의 성적 데이터베이스에서 영구 삭제
+ * =============================================================
+ */
+function deleteScoreRecord(docId, studentName) {
+  if (!db) return;
+
+  const isConfirmed = confirm(`정말 [${studentName}] 학생의 이 퀴즈 도전 기록을 삭제하시겠습니까?\n삭제된 기록은 되돌릴 수 없습니다.`);
+  if (!isConfirmed) return;
+
+  db.collection("global_scores")
+    .doc(docId)
+    .delete()
+    .then(() => {
+      alert("성공적으로 성적 기록이 삭제되었습니다.");
+      
+      // 로컬 배열 메모리에서 해당 데이터 필터링 제거 (네트워크 절약 고속 갱신)
+      allScores = allScores.filter(item => item.id !== docId);
+      
+      // 화면 통계 재연산 및 표 즉시 필터 갱신
+      calculateSummaryStats();
+      applyFilters();
+    })
+    .catch(error => {
+      console.error("데이터 삭제 실패:", error);
+      alert("성적 기록 삭제에 실패했습니다:\n" + error.message + "\n\n(파이어베이스 Rules 규칙 설정에서 교사의 delete 권한이 허용되어 있는지 확인해 주세요!)");
+    });
 }
 
 /**
