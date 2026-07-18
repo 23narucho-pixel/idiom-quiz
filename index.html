@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3.0">
+  <link rel="stylesheet" href="style.css?v=4.0">
   
   <!-- =============================================================
    * Firebase SDK CDN 연결 (Compat 모드 사용으로 정적 JS 연동 최적화)
@@ -116,15 +116,16 @@
             <table class="history-table">
               <thead>
                 <tr>
-                  <th>도전 날짜</th>
-                  <th>맞힌 문제</th>
+                  <th>제출 날짜</th>
+                  <th>난이도</th>
+                  <th>맞힌 개수</th>
                   <th>최종 점수</th>
                 </tr>
               </thead>
               <tbody id="history-list">
                 <!-- 파이어베이스 Firestore에서 가져온 데이터가 동적 추가됩니다 -->
                 <tr>
-                  <td colspan="3" class="table-empty">로딩 중이거나 기록이 없습니다.</td>
+                  <td colspan="4" class="table-empty">로딩 중이거나 기록이 없습니다.</td>
                 </tr>
               </tbody>
             </table>
@@ -141,6 +142,6 @@
     </section>
   </div>
 
-  <script defer src="app.js?v=3.2"></script>
+  <script defer src="app.js?v=4.0"></script>
 </body>
 </html>

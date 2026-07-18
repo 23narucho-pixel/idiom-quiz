@@ -32,97 +32,221 @@ if (typeof firebase !== 'undefined') {
 
 /**
  * =============================================================
- * 2. 문제 은행 데이터 정의 (초등학교 6학년 수준 관용표현 10문항)
+ * 2. 난이도별 문제 은행 데이터 정의 (상 / 중 / 하 세분화)
  * =============================================================
  */
-const questionBank = [
-  {
-    idiom: "발이 넓다",
-    question: "다음 중 '아는 사람이 많아 사교 범위가 넓다'를 뜻하는 관용표현은?",
-    options: ["손이 크다", "발이 넓다", "귀가 얇다", "낯이 뜨겁다"],
-    answer: "발이 넓다",
-    meaning: "사교성이 좋아 아는 사람이 많다.",
-    example: "삼촌은 발이 넓어서 동네에 모르는 사람이 없다."
-  },
-  {
-    idiom: "귀가 얇다",
-    question: "남의 말을 쉽게 믿고 따르는 성격이나 행동을 가리키는 관용표현은?",
-    options: ["입이 무겁다", "눈이 높다", "귀가 얇다", "코가 납작해지다"],
-    answer: "귀가 얇다",
-    meaning: "남의 말을 쉽게 받아들이거나 믿는다.",
-    example: "지우는 귀가 얇아서 광고만 보고 물건을 쉽게 사곤 한다."
-  },
-  {
-    idiom: "발 벗고 나서다",
-    question: "남의 일을 돕기 위해 적극적으로 앞장서는 모습을 뜻하는 관용표현은?",
-    options: ["발 벗고 나서다", "손을 떼다", "배를 불리다", "목을 축이다"],
-    answer: "발 벗고 나서다",
-    meaning: "적극적으로 해결하기 위해 앞장서다.",
-    example: "우리 반 반장은 어려움에 처한 친구를 위해 항상 발 벗고 나선다."
-  },
-  {
-    idiom: "쇠뿔도 단김에 빼라",
-    question: "어떤 일을 하려고 마음먹었으면 미루지 말고 바로 해치워야 함을 이르는 속담은?",
-    options: ["등잔 밑이 어둡다", "쇠뿔도 단김에 빼라", "밑 빠진 독에 물 붓기", "누워서 떡 먹기"],
-    answer: "쇠뿔도 단김에 빼라",
-    meaning: "기회가 왔을 때 지체 없이 일을 처리해야 한다.",
-    example: "공부하기로 마음먹었으니 쇠뿔도 단김에 빼는 격으로 지금 시작하자!"
-  },
-  {
-    idiom: "비행기를 태우다",
-    question: "남을 지나치게 칭찬하여 우쭐하게 만드는 행동을 뜻하는 관용표현은?",
-    options: ["콧대를 높이다", "바람을 넣다", "비행기를 태우다", "어깨를 으쓱하다"],
-    answer: "비행기를 태우다",
-    meaning: "남을 과하게 칭찬하여 들뜨게 만들다.",
-    example: "너무 비행기 태우지 마세요, 제가 정말 쑥스러워요."
-  },
-  {
-    idiom: "낯이 뜨겁다",
-    question: "남 보기 부끄럽거나 민망하여 얼굴이 화끈거린다는 뜻의 관용표현은?",
-    options: ["낯이 뜨겁다", "머리를 맞대다", "가슴을 쓸어내리다", "발을 뻗고 자다"],
-    answer: "낯이 뜨겁다",
-    meaning: "남 보기에 매우 부끄럽고 민망하다.",
-    example: "내 실수를 많은 친구들이 보고 있어서 얼굴이 붉어지고 낯이 뜨거웠다."
-  },
-  {
-    idiom: "눈독을 들이다",
-    question: "욕심을 내어 가지고 싶어 하거나 아주 깊은 관심을 보일 때 쓰는 관용표현은?",
-    options: ["눈을 붙이다", "눈독을 들이다", "눈을 감아주다", "눈에 불을 켜다"],
-    answer: "눈독을 들이다",
-    meaning: "마음에 두고 크게 욕심을 내어 지켜보다.",
-    example: "동생이 내가 생일 선물로 받은 장난감에 자꾸 눈독을 들이고 있다."
-  },
-  {
-    idiom: "배가 아프다",
-    question: "남이 잘되는 것이 부럽고 시샘이 나서 기분이 좋지 않을 때 쓰는 관용표현은?",
-    options: ["배가 아프다", "가슴이 벅차다", "등을 돌리다", "뼈가 빠지다"],
-    answer: "배가 아프다",
-    meaning: "남이 잘되는 것을 시샘하고 시기하다.",
-    example: "친구가 퀴즈에서 만점을 받자 속상해서 은근히 배가 아팠다."
-  },
-  {
-    idiom: "입을 모으다",
-    question: "여러 사람이 한목소리로 같은 주장이나 의견을 말하는 행동을 뜻하는 관용표현은?",
-    options: ["입을 모으다", "입이 짧다", "귀를 기울이다", "손이 발이 되다"],
-    answer: "입을 모으다",
-    meaning: "여러 사람이 같은 내용의 의견을 같이하다.",
-    example: "선생님들은 우리 반의 협동심에 대해 모두 입을 모아 칭찬하셨다."
-  },
-  {
-    idiom: "어깨가 무겁다",
-    question: "중요한 의무나 책임을 맡아 마음의 부담이 매우 클 때 비유적으로 쓰는 관용표현은?",
-    options: ["어깨를 나란히 하다", "어깨가 무겁다", "손을 잡다", "발을 동동 구르다"],
-    answer: "어깨가 무겁다",
-    meaning: "맡은 책임이나 임무에 대한 마음에 관한 부담이 크다.",
-    example: "이번에 전교 회장 직무를 맡게 되어 양어깨가 무겁다."
-  }
-];
+const quizDataByDifficulty = {
+  // 🌱 하 (기본 생활 관용 표현)
+  easy: [
+    {
+      idiom: "발이 넓다",
+      question: "다음 중 '아는 사람이 많아 사교 범위가 넓다'를 뜻하는 관용표현은?",
+      options: ["손이 크다", "발이 넓다", "귀가 얇다", "낯이 뜨겁다"],
+      answer: "발이 넓다",
+      meaning: "사교성이 좋아 아는 사람이 많다.",
+      example: "삼촌은 발이 넓어서 동네에 모르는 사람이 없다."
+    },
+    {
+      idiom: "귀가 얇다",
+      question: "남의 말을 쉽게 믿고 따르는 성격이나 행동을 가리키는 관용표현은?",
+      options: ["입이 무겁다", "눈이 높다", "귀가 얇다", "코가 납작해지다"],
+      answer: "귀가 얇다",
+      meaning: "남의 말을 쉽게 받아들이거나 믿는다.",
+      example: "지우는 귀가 얇아서 광고만 보고 물건을 쉽게 사곤 한다."
+    },
+    {
+      idiom: "입이 가볍다",
+      question: "비밀을 지키지 못하고 남에게 쉽게 터놓는 행동을 뜻하는 관용표현은?",
+      options: ["입이 가볍다", "입이 짧다", "입을 모으다", "입을 다물다"],
+      answer: "입이 가볍다",
+      meaning: "참을성이 없어 비밀을 쉽게 누설한다.",
+      example: "민호는 입이 가벼워서 중요한 이야기를 털어놓기가 조심스럽다."
+    },
+    {
+      idiom: "눈이 높다",
+      question: "사물을 선택하거나 바라보는 안목, 기대 수준이 매우 높을 때 쓰는 관용표현은?",
+      options: ["눈에 띄다", "눈이 높다", "눈독을 들이다", "눈을 감아주다"],
+      answer: "눈이 높다",
+      meaning: "안목이나 기대 수준이 높다.",
+      example: "지은이는 눈이 높아서 마음에 드는 신발을 찾기 힘들었다."
+    },
+    {
+      idiom: "손이 크다",
+      question: "물건을 사거나 음식을 만들 때 아끼지 않고 넉넉하게 준비하는 모습을 뜻하는 관용표현은?",
+      options: ["손을 놓다", "손을 씻다", "손이 크다", "손에 땀을 쥐다"],
+      answer: "손이 크다",
+      meaning: "씀씀이가 크거나 음식을 아낌없이 넉넉하게 만든다.",
+      example: "할머니는 손이 크셔서 항상 음식을 푸짐하게 차려주신다."
+    },
+    {
+      idiom: "얼굴이 두껍다",
+      question: "뻔뻔스러워서 부끄러운 줄을 모를 때 비유적으로 쓰는 관용표현은?",
+      options: ["얼굴이 두껍다", "낯이 뜨겁다", "얼굴을 가리다", "콧대가 높다"],
+      answer: "얼굴이 두껍다",
+      meaning: "뻔뻔하여 부끄러움을 느끼지 않는다.",
+      example: "잘못을 하고도 사과 없이 웃기만 하니 정말 얼굴이 두껍다."
+    },
+    {
+      idiom: "입이 무겁다",
+      question: "비밀을 들려주어도 남에게 함부로 말하지 않고 신중한 사람을 이르는 관용표현은?",
+      options: ["입이 심심하다", "입이 무겁다", "입을 모으다", "입이 가볍다"],
+      answer: "입이 무겁다",
+      meaning: "비밀을 지키고 말을 신중하게 한다.",
+      example: "유진이는 입이 무거워서 무슨 비밀이든 안심하고 털어놓을 수 있다."
+    },
+    {
+      idiom: "발을 맞추다",
+      question: "서로 협력하여 의도나 보조를 같게 한다는 뜻의 관용표현은?",
+      options: ["발을 뻗다", "발을 맞추다", "발을 묶다", "발을 동동 구르다"],
+      answer: "발을 맞추다",
+      meaning: "서로 생각이나 행동을 일치시키다.",
+      example: "우리 팀원들은 서로 발을 맞추어 프로젝트를 빠르게 완성했다."
+    }
+  ],
+
+  // 🌿 중 (보통 실전 관용 표현)
+  normal: [
+    {
+      idiom: "가슴을 치다",
+      question: "매우 안타깝거나 원통해서 가슴을 두드리는 행위를 비유한 관용표현은?",
+      options: ["가슴을 치다", "가슴을 쓸어내리다", "가슴이 벅차다", "어깨를 겨누다"],
+      answer: "가슴을 치다",
+      meaning: "매우 안타깝거나 억울하여 탄식하다.",
+      example: "아쉬운 실수로 경기에서 지자 감독님은 가슴을 쳤다."
+    },
+    {
+      idiom: "어깨가 가볍다",
+      question: "맡았던 무거운 책임을 마치고 마음이 홀가분해질 때 쓰는 관용표현은?",
+      options: ["어깨를 비비다", "어깨가 무겁다", "어깨가 가볍다", "어깨를 으쓱하다"],
+      answer: "어깨가 가볍다",
+      meaning: "부담이나 책임에서 벗어나 마음이 편안하다.",
+      example: "시험이 드디어 모두 끝나고 나니 양어깨가 가볍다."
+    },
+    {
+      idiom: "발을 빼다",
+      question: "자신이 관여하던 일이나 관계에서 손을 떼고 물러나는 모습을 뜻하는 관용표현은?",
+      options: ["발 벗고 나서다", "발을 빼다", "발이 묶이다", "발을 다치다"],
+      answer: "발을 빼다",
+      meaning: "일이나 관계에서 은근히 물러나다.",
+      example: "위험한 소문이 돌기 시작하자 그는 그 사업에서 서둘러 발을 뺐다."
+    },
+    {
+      idiom: "바가지를 쓰다",
+      question: "물건이나 서비스를 살 때 터무니없이 비싼 값을 치르는 손해를 가리키는 관용표현은?",
+      options: ["바가지를 긁다", "바가지를 쓰다", "바가지를 엎다", "탈을 쓰다"],
+      answer: "바가지를 쓰다",
+      meaning: "터무니없이 비싼 가격으로 손해를 보다.",
+      example: "관광지에서 미리 시세를 확인하지 않아서 바가지를 썼다."
+    },
+    {
+      idiom: "목이 빠지다",
+      question: "간절한 마음으로 오랫동안 무언가를 기다릴 때 비유적으로 쓰는 관용표현은?",
+      options: ["목을 축이다", "목에 힘을 주다", "목이 빠지다", "목이 메이다"],
+      answer: "목이 빠지다",
+      meaning: "간절하게 오래 기다리다.",
+      example: "택배가 언제 올까 목이 빠지게 대문 앞을 바라보았다."
+    },
+    {
+      idiom: "손을 놓다",
+      question: "진행하던 일이나 작업을 중단하고 손을 떼는 상태를 뜻하는 관용표현은?",
+      options: ["손을 씻다", "손을 놓다", "손을 벌리다", "손을 잡다"],
+      answer: "손을 놓다",
+      meaning: "하던 일을 중단하거나 그만두다.",
+      example: "너무 힘들어서 한참 동안 공부에서 손을 놓고 있었다."
+    },
+    {
+      idiom: "배가 아프다",
+      question: "남이 잘되거나 성공하는 것을 질투하고 시샘할 때 자주 쓰는 관용표현은?",
+      options: ["배를 채우다", "배가 아프다", "등을 돌리다", "가슴이 답답하다"],
+      answer: "배가 아프다",
+      meaning: "남이 잘되는 것을 부러워하고 시기하다.",
+      example: "사촌이 땅을 사면 배가 아프다는 옛말이 있다."
+    },
+    {
+      idiom: "발 벗고 나서다",
+      question: "남의 어려움을 돕기 위해 적극적으로 앞장서는 모습을 뜻하는 관용표현은?",
+      options: ["발 벗고 나서다", "손을 떼다", "배를 불리다", "목을 축이다"],
+      answer: "발 벗고 나서다",
+      meaning: "적극적으로 해결하기 위해 앞장서다.",
+      example: "우리 반 반장은 어려움에 처한 친구를 위해 항상 발 벗고 나선다."
+    }
+  ],
+
+  // 🔥 상 (심화 및 숙어 표현)
+  hard: [
+    {
+      idiom: "간에 기별도 안 가다",
+      question: "음식 양이 너무 적어서 먹었는지도 모를 만큼 모자랄 때 쓰는 관용표현은?",
+      options: ["간을 맞추다", "간에 기별도 안 가다", "간이 콩알만 해지다", "입맛을 돋우다"],
+      answer: "간에 기별도 안 가다",
+      meaning: "먹은 음식의 양이 너무 적어 성에 차지 않는다.",
+      example: "과자 한 조각으로는 대식가인 내 간에 기별도 안 간다."
+    },
+    {
+      idiom: "우물 안 개구리",
+      question: "넓은 세상의 사정을 전혀 알지 못하고 자기 식견만 고집하는 사람을 뜻하는 말은?",
+      options: ["우물 안 개구리", "돌다리도 두드려 건너기", "꿩 대신 닭", "티끌 모아 태산"],
+      answer: "우물 안 개구리",
+      meaning: "세상 물정을 모르고 시야가 좁은 사람.",
+      example: "해외 경험을 쌓고 나니 내가 그동안 우물 안 개구리였음을 깨달았다."
+    },
+    {
+      idiom: "쇠뿔도 단김에 빼라",
+      question: "어떤 일을 마음먹었을 때 망설이지 말고 즉시 해치워야 함을 뜻하는 관용 속담은?",
+      options: ["등잔 밑이 어둡다", "쇠뿔도 단김에 빼라", "밑 빠진 독에 물 붓기", "누워서 떡 먹기"],
+      answer: "쇠뿔도 단김에 빼라",
+      meaning: "의욕이 있을 때 즉시 지체 없이 일을 처리하다.",
+      example: "공부하기로 마음먹었으니 쇠뿔도 단김에 빼는 격으로 지금 시작하자!"
+    },
+    {
+      idiom: "도루묵이 되다",
+      question: "애써 노력한 일이나 성과가 도로 허사가 되어 처음으로 돌아감을 비유하는 관용표현은?",
+      options: ["도루묵이 되다", "물 건너가다", "죽이 되다", "판이 깨지다"],
+      answer: "도루묵이 되다",
+      meaning: "애써 한 일이 도로 헛수고가 되다.",
+      example: "열심히 저장하지 않고 컴퓨터를 껐더니 작업이 다 도루묵이 되었다."
+    },
+    {
+      idiom: "눈 가리고 아웅",
+      question: "얕은 꾀로 남을 속이려 하지만 속지 않는 뻔한 임시변통을 뜻하는 관용표현은?",
+      options: ["눈길을 주다", "눈 가리고 아웅", "눈을 의심하다", "눈앞이 깜깜하다"],
+      answer: "눈 가리고 아웅",
+      meaning: "얕은 꾀로 남을 속이려 하나 속지 않는 행동.",
+      example: "잘못을 감추려고 거짓말을 하는 것은 눈 가리고 아웅하는 격이다."
+    },
+    {
+      idiom: "비 온 뒤에 땅이 굳어진다",
+      question: "시련이나 곤란을 겪은 후에 기반이나 관계가 더 단단해짐을 비유하는 말은?",
+      options: ["비 온 뒤에 땅이 굳어진다", "가랑비에 옷 젖는다", "소 읽고 외양간 고친다", "하늘이 무너져도 솟아날 구멍이 있다"],
+      answer: "비 온 뒤에 땅이 굳어진다",
+      meaning: "어려움을 겪은 뒤 더욱 견고해진다.",
+      example: "친구와 크게 다투었지만 서로 사과하고 나니 비 온 뒤 땅이 굳어지듯 더 친해졌다."
+    },
+    {
+      idiom: "가랑비에 옷 젖는 줄 모른다",
+      question: "작은 일이라도 계속 반복되면 무시하지 못할 큰 결과나 손실이 됨을 경고하는 말은?",
+      options: ["가랑비에 옷 젖는 줄 모른다", "바람 따라 돛을 단다", "우물 가서 숭늉 찾는다", "돌다리도 두드려 본다"],
+      answer: "가랑비에 옷 젖는 줄 모른다",
+      meaning: "사소한 지출이나 방심이 쌓여 큰 손실이 됨을 이른다.",
+      example: "매일 과자 값으로 쓴 소액이 모여 가랑비에 옷 젖듯 큰 돈이 되었다."
+    },
+    {
+      idiom: "비행기를 태우다",
+      question: "남을 지나치게 칭찬하여 들뜨게 만들 때 쓰는 관용표현은?",
+      options: ["콧대를 높이다", "바람을 넣다", "비행기를 태우다", "어깨를 으쓱하다"],
+      answer: "비행기를 태우다",
+      meaning: "남을 과하게 칭찬하여 우쭐하게 만든다.",
+      example: "너무 비행기 태우지 마세요, 제가 정말 쑥스러워요."
+    }
+  ]
+};
 
 /**
  * =============================================================
  * 3. 전역 상태 및 게임 변수 정의
  * =============================================================
  */
+let selectedDifficulty = 'easy'; // 선택된 난이도 ('easy' | 'normal' | 'hard')
 let currentQuizSet = []; // 이번 퀴즈 세트 (무작위 5문항)
 let currentQuestionIndex = 0; // 현재 진행 중인 문제 인덱스 (0 ~ 4)
 let score = 0; // 맞힌 개수 기반 점수
@@ -265,10 +389,15 @@ function saveScoreToFirestore(finalScore, selections) {
       answer: item.answer
     }));
 
+  const diffNameMap = { easy: '🌱 하', normal: '🌿 중', hard: '🔥 상' };
+  const currentDiffName = diffNameMap[selectedDifficulty] || '🌱 하';
+
   // 1. 개인 보관용 성적 데이터 객체
   const personalDocData = {
     score: finalScore,
     correctCount: correctCount,
+    difficulty: selectedDifficulty,
+    difficultyName: currentDiffName,
     wrongAnswers: wrongAnswers,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
@@ -279,6 +408,8 @@ function saveScoreToFirestore(finalScore, selections) {
     studentEmail: currentUser.email || '이메일 정보 없음',
     score: finalScore,
     correctCount: correctCount,
+    difficulty: selectedDifficulty,
+    difficultyName: currentDiffName,
     wrongAnswers: wrongAnswers,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
@@ -344,9 +475,14 @@ function loadPastScores() {
           minute: '2-digit'
         });
 
+        const diffBadgeClass = data.difficulty === 'hard' ? 'badge-diff badge-diff-hard' :
+                               (data.difficulty === 'normal' ? 'badge-diff badge-diff-normal' : 'badge-diff badge-diff-easy');
+        const diffName = data.difficultyName || '🌱 하';
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${dateString}</td>
+          <td><span class="${diffBadgeClass}">${diffName}</span></td>
           <td>${data.correctCount} / 5</td>
           <td><span class="gradient-text" style="font-weight:700;">${data.score}점</span></td>
         `;
@@ -357,7 +493,7 @@ function loadPastScores() {
       console.error("히스토리 로드 실패:", error);
       historyListContainer.innerHTML = `
         <tr>
-          <td colspan="3" class="table-empty" style="color:var(--error-color) !important;">
+          <td colspan="4" class="table-empty" style="color:var(--error-color) !important;">
             기록을 불러오지 못했습니다.
           </td>
         </tr>
@@ -371,13 +507,14 @@ function loadPastScores() {
  * =============================================================
  */
 
-// 퀴즈 시작 (초기화 및 문제 추출)
+// 퀴즈 시작 (선택된 난이도 문제 수급 및 초기화)
 function startQuiz() {
   currentQuestionIndex = 0;
   score = 0;
   userSelections = [];
 
-  const shuffledBank = shuffleArray(questionBank);
+  const targetBank = quizDataByDifficulty[selectedDifficulty] || quizDataByDifficulty.easy;
+  const shuffledBank = shuffleArray(targetBank);
   currentQuizSet = shuffledBank.slice(0, 5);
 
   renderQuestion();
@@ -550,6 +687,16 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // 재시작 버튼 바인딩
   document.getElementById('btn-restart').addEventListener('click', startQuiz);
+
+  // 난이도 카드 선택 이벤트 바인딩
+  document.querySelectorAll('.btn-diff').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.btn-diff').forEach(b => b.classList.remove('active'));
+      const targetBtn = e.currentTarget;
+      targetBtn.classList.add('active');
+      selectedDifficulty = targetBtn.getAttribute('data-diff') || 'easy';
+    });
+  });
 
   // 구글 로그인 및 로그아웃 버튼 바인딩
   const btnGoogleLogin = document.getElementById('btn-login-google');

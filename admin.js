@@ -161,7 +161,7 @@ function renderTable(dataList) {
   if (dataList.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" class="table-empty">조회된 조건에 부합하는 학생 성적이 없습니다.</td>
+        <td colspan="7" class="table-empty">조회된 조건에 부합하는 학생 성적이 없습니다.</td>
       </tr>
     `;
     return;
@@ -180,9 +180,14 @@ function renderTable(dataList) {
     const isPerfect = (item.score === 100);
     const scoreBadgeClass = isPerfect ? 'badge-score badge-score-perfect' : 'badge-score';
 
+    const diffBadgeClass = item.difficulty === 'hard' ? 'badge-diff badge-diff-hard' :
+                           (item.difficulty === 'normal' ? 'badge-diff badge-diff-normal' : 'badge-diff badge-diff-easy');
+    const diffName = item.difficultyName || '🌱 하';
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${dateString}</td>
+      <td><span class="${diffBadgeClass}">${diffName}</span></td>
       <td style="font-weight:700; color:#1a202c;">${item.studentName}</td>
       <td style="color:var(--text-muted); font-size:0.88rem;">${item.studentEmail}</td>
       <td><strong>${item.correctCount} / 5 문항</strong></td>
