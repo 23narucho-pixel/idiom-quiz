@@ -322,13 +322,19 @@ function setupAuthObserver() {
     const quizStartGroup = document.getElementById('quiz-start-group');
     
     if (user) {
-      // 1. 로그인 성공 시 -> 프로필, 난이도 선택 카드, 시작 버튼 노출!
+      // 1. 로그인 성공 시 -> 프로필, 난이도 선택 카드, 시작 버튼 강제 노출!
       currentUser = user;
       userInfoBox.classList.remove('hidden');
       loginBox.classList.add('hidden');
       
-      if (diffContainer) diffContainer.classList.remove('hidden');
-      if (quizStartGroup) quizStartGroup.classList.remove('hidden');
+      if (diffContainer) {
+        diffContainer.classList.remove('hidden');
+        diffContainer.style.display = 'block'; // 인라인 스타일로 노출 강제화
+      }
+      if (quizStartGroup) {
+        quizStartGroup.classList.remove('hidden');
+        quizStartGroup.style.display = 'block'; // 인라인 스타일로 노출 강제화
+      }
       
       // 프로필 정보 매칭
       document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
@@ -351,8 +357,14 @@ function setupAuthObserver() {
       userInfoBox.classList.add('hidden');
       loginBox.classList.remove('hidden');
       
-      if (diffContainer) diffContainer.classList.add('hidden');
-      if (quizStartGroup) quizStartGroup.classList.add('hidden');
+      if (diffContainer) {
+        diffContainer.classList.add('hidden');
+        diffContainer.style.display = 'none'; // 인라인 숨김 강제화
+      }
+      if (quizStartGroup) {
+        quizStartGroup.classList.add('hidden');
+        quizStartGroup.style.display = 'none'; // 인라인 숨김 강제화
+      }
       
       if (btnAdminLink) {
         btnAdminLink.style.display = "none"; // 로그아웃 시 강제 은폐
