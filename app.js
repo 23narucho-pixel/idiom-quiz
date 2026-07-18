@@ -317,14 +317,18 @@ function setupAuthObserver() {
   auth.onAuthStateChanged(user => {
     const userInfoBox = document.getElementById('user-info');
     const loginBox = document.getElementById('login-box');
-    const btnStart = document.getElementById('btn-start');
     const btnAdminLink = document.getElementById('btn-admin-link');
+    const diffContainer = document.getElementById('difficulty-container');
+    const quizStartGroup = document.getElementById('quiz-start-group');
     
     if (user) {
-      // 1. 로그인 상태인 경우
+      // 1. 로그인 성공 시 -> 프로필, 난이도 선택 카드, 시작 버튼 노출!
       currentUser = user;
       userInfoBox.classList.remove('hidden');
       loginBox.classList.add('hidden');
+      
+      if (diffContainer) diffContainer.classList.remove('hidden');
+      if (quizStartGroup) quizStartGroup.classList.remove('hidden');
       
       // 프로필 정보 매칭
       document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
@@ -339,23 +343,20 @@ function setupAuthObserver() {
       } else if (btnAdminLink) {
         btnAdminLink.style.display = "none"; // 일반 사용자는 강제로 은폐
       }
-      
-      // 시작 버튼 활성화 및 명칭 변경
-      btnStart.disabled = false;
-      btnStart.textContent = "시작하기";
+
+      loadPastScores(); // 과거 성적 표 로드
     } else {
-      // 2. 로그아웃 상태인 경우
+      // 2. 로그아웃 또는 비로그인 시 -> 로그인 안내 상자만 노출하고 난이도 카드 및 시작 버튼 은폐!
       currentUser = null;
       userInfoBox.classList.add('hidden');
       loginBox.classList.remove('hidden');
       
+      if (diffContainer) diffContainer.classList.add('hidden');
+      if (quizStartGroup) quizStartGroup.classList.add('hidden');
+      
       if (btnAdminLink) {
         btnAdminLink.style.display = "none"; // 로그아웃 시 강제 은폐
       }
-      
-      // 시작 버튼 비활성화 및 안내 문구 노출
-      btnStart.disabled = true;
-      btnStart.textContent = "로그인 후 도전하기";
     }
   });
 }
