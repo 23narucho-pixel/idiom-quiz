@@ -315,30 +315,36 @@ function logout() {
 function setupAuthObserver() {
   if (!auth) return;
   auth.onAuthStateChanged(user => {
-    const userInfoBox = document.getElementById('user-info');
+    const userInfoBox = document.getElementById('user-profile') || document.getElementById('user-info');
     const loginBox = document.getElementById('login-box');
     const btnAdminLink = document.getElementById('btn-admin-link');
     const diffContainer = document.getElementById('difficulty-container');
-    const quizStartGroup = document.getElementById('quiz-start-group');
+    const btnStart = document.getElementById('btn-start');
     
     if (user) {
-      // 1. 로그인 성공 시 -> 프로필, 난이도 선택 카드, 시작 버튼 강제 노출!
+      // 1. 로그인 성공 시 -> 프로필 및 난이도 선택 카드 강제 노출, 시작 버튼 완전 활성화!
       currentUser = user;
-      userInfoBox.classList.remove('hidden');
-      loginBox.classList.add('hidden');
+      if (userInfoBox) userInfoBox.classList.remove('hidden');
+      if (loginBox) loginBox.classList.add('hidden');
       
       if (diffContainer) {
         diffContainer.classList.remove('hidden');
         diffContainer.style.display = 'block'; // 인라인 스타일로 노출 강제화
       }
-      if (quizStartGroup) {
-        quizStartGroup.classList.remove('hidden');
-        quizStartGroup.style.display = 'block'; // 인라인 스타일로 노출 강제화
+      
+      // 시작 버튼 락 해제 및 문구 활성화
+      if (btnStart) {
+        btnStart.disabled = false;
+        btnStart.textContent = "퀴즈 시작하기 🚀";
+        btnStart.style.opacity = "1";
+        btnStart.style.cursor = "pointer";
       }
       
       // 프로필 정보 매칭
-      document.getElementById('user-photo').src = user.photoURL || 'https://via.placeholder.com/28';
-      document.getElementById('user-name').textContent = user.displayName || '학습자';
+      const userPhoto = document.getElementById('user-photo');
+      const userName = document.getElementById('user-name');
+      if (userPhoto) userPhoto.src = user.photoURL || 'https://via.placeholder.com/28';
+      if (userName) userName.textContent = user.displayName || '학습자';
       
       // [관리자 계정 감지] 23narucho@gmail.com 단 하나의 메일 계정만 엄격하게 관리자로 승인
       const userEmail = (user.email || '').toLowerCase();
@@ -352,18 +358,22 @@ function setupAuthObserver() {
 
       loadPastScores(); // 과거 성적 표 로드
     } else {
-      // 2. 로그아웃 또는 비로그인 시 -> 로그인 안내 상자만 노출하고 난이도 카드 및 시작 버튼 은폐!
+      // 2. 로그아웃 또는 비로그인 시 -> 로그인 안내 상자만 노출하고 난이도 카드 숨김 & 시작 버튼 비활성화!
       currentUser = null;
-      userInfoBox.classList.add('hidden');
-      loginBox.classList.remove('hidden');
+      if (userInfoBox) userInfoBox.classList.add('hidden');
+      if (loginBox) loginBox.classList.remove('hidden');
       
       if (diffContainer) {
         diffContainer.classList.add('hidden');
         diffContainer.style.display = 'none'; // 인라인 숨김 강제화
       }
-      if (quizStartGroup) {
-        quizStartGroup.classList.add('hidden');
-        quizStartGroup.style.display = 'none'; // 인라인 숨김 강제화
+      
+      // 시작 버튼 회색 비활성화
+      if (btnStart) {
+        btnStart.disabled = true;
+        btnStart.textContent = "로그인 후 도전하기";
+        btnStart.style.opacity = "0.6";
+        btnStart.style.cursor = "not-allowed";
       }
       
       if (btnAdminLink) {

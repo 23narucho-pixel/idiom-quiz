@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=4.0">
+  <link rel="stylesheet" href="style.css?v=6.0">
   
   <!-- =============================================================
    * Firebase SDK CDN 연결 (Compat 모드 사용으로 정적 JS 연동 최적화)
@@ -35,29 +35,59 @@
           <div class="prompt-chip chip-3">#쇠뿔도_단김에! 🐂</div>
         </div>
         
-        <!-- 로그인 상태에 따라 시작 버튼이 켜집니다 -->
-        <button id="btn-start" class="btn btn-primary btn-large" disabled>로그인 후 도전하기</button>
-
-        <!-- [레이아웃 변경] 시작하기 버튼 아래로 이동 및 프리미엄 구조로 보강된 로그인 컨테이너 -->
-        <div id="auth-container" class="auth-bar-bottom">
-          <div id="user-info" class="user-info-box-premium hidden">
-            <div class="user-profile-header">
-              <img id="user-photo" src="" alt="프로필 사진" class="profile-img-premium">
-              <div class="user-profile-details">
-                <span class="user-status-label">인증된 사용자</span>
-                <span id="user-name" class="profile-name-premium">사용자명</span>
-              </div>
-            </div>
-            <!-- [추가] 관리자 계정 전용 대시보드 이동 링크 버튼 (인라인 스타일 강제 숨김 처리) -->
-            <a href="admin.html" id="btn-admin-link" class="btn btn-admin-premium" style="display: none;">교사용 대시보드 ➡️</a>
-            <button id="btn-logout" class="btn btn-logout-premium">로그아웃</button>
-          </div>
-          <div id="login-box" class="login-box-container">
-            <button id="btn-login-google" class="btn btn-google-premium">
-              <span class="g-icon">⚙️</span> Google 계정으로 로그인
-            </button>
+        <!-- 구글 사용자 정보 & 바로가기 영역 (로그인 시 노출) -->
+      <div id="user-profile" class="user-profile-box hidden">
+        <div class="user-profile-info">
+          <img id="user-photo" src="" alt="프로필" class="user-avatar">
+          <div class="user-details">
+            <span class="user-badge">인증된 사용자</span>
+            <strong id="user-name">학습자</strong>
           </div>
         </div>
+        <div class="user-actions">
+          <a id="btn-admin-link" href="admin.html" class="btn-admin-link" style="display: none;">교사용 대시보드 ➡️</a>
+          <button id="btn-logout" class="btn-logout-link">로그아웃</button>
+        </div>
+      </div>
+
+      <!-- 구글 로그인 권장 안내 상자 (비로그인 시 노출) -->
+      <div id="login-box" class="login-notice-card">
+        <div class="notice-icon">🔐</div>
+        <div class="notice-content">
+          <h4>로그인이 필요한 서비스입니다</h4>
+          <p>퀴즈를 풀고 나의 성적 기록을 저장하려면 구글 로그인을 진행해 주세요.</p>
+        </div>
+        <button id="btn-login-google" class="btn btn-google">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+          구글 계정으로 로그인
+        </button>
+      </div>
+
+      <!-- [신규 추가] 난이도 3단계 선택 영역 (로그인 시 노출) -->
+      <div id="difficulty-container" class="difficulty-container hidden" style="display: none;">
+        <h3 class="difficulty-title">🎯 도전할 난이도를 선택하세요</h3>
+        <div class="difficulty-cards">
+          <button type="button" class="btn-diff active" data-diff="easy">
+            <span class="diff-icon">🌱</span>
+            <span class="diff-label">하 (기본)</span>
+            <span class="diff-sub">기초 생활 표현</span>
+          </button>
+          <button type="button" class="btn-diff" data-diff="normal">
+            <span class="diff-icon">🌿</span>
+            <span class="diff-label">중 (보통)</span>
+            <span class="diff-sub">실전 활용 표현</span>
+          </button>
+          <button type="button" class="btn-diff" data-diff="hard">
+            <span class="diff-icon">🔥</span>
+            <span class="diff-label">상 (심화)</span>
+            <span class="diff-sub">고난도 어휘 표현</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 퀴즈 시작 버튼 -->
+      <div id="quiz-start-group" class="button-group">
+        <button id="btn-start" class="btn btn-primary btn-large" disabled>로그인 후 도전하기</button>
       </div>
     </section>
 
@@ -142,6 +172,6 @@
     </section>
   </div>
 
-  <script defer src="app.js?v=4.1"></script>
+  <script defer src="app.js?v=6.0"></script>
 </body>
 </html>
